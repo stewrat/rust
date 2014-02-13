@@ -522,16 +522,10 @@ impl ToPrimitive for BigUint {
     #[cfg(target_word_size = "64")]
     #[inline]
     fn to_u64(&self) -> Option<u64> {
-        match self.data {
-            [] => {
-                Some(0)
-            }
-            [n0] => {
-                Some(n0 as u64)
-            }
-            [n0, n1] => {
-                Some(BigDigit::to_uint(n1, n0) as u64)
-            }
+        match self.data.len() {
+            0 => Some(0),
+            1 => Some(self.data[0] as u64),
+            2 => Some(BigDigit::to_uint(self.data[1], self.data[0]) as u64),
             _ => None
         }
     }
